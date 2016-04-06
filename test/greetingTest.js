@@ -1,14 +1,27 @@
-var chai = require('chai');
-var expect = chai.expect;
-var Name = require(__dirname + '/../lib/greeting');
+var expect = require('chai').expect;
+var greetCli = require(__dirname + '/../bin/greet');
 
-var someName = new Name();
-
-describe('greeting', function() {
-  it('should have a name', function(){
-    expect(someName.name).to.eql('Ben');
+describe('greet cli', () => {
+  before(() => {
+    this.process_backup = process.argv;
+    process.argv = [null,null,'test'];
   });
-  it('should output Hello and name of user', function(){
-    expect(someName.greeting).to.eql('Hello' + someName.name);
+
+  after(() => {
+    process.argv = this.process_backup;
+  });
+
+  it('should greet test', () => {
+    expect(greetCli()).to.eql('Hello test');
+  });
+
+  describe('with no arguments', () => {
+    before(() => {
+      process.argv = [];
+    });
+
+    it('should greet the world', () => {
+      expect(greetCli()).to.eql('Hello World');
+    });
   });
 });
